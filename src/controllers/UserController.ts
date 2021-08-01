@@ -3,6 +3,7 @@ import { User } from "../interfaces/user";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { UserRepository } from "../repositories/userRepository";
 import { QueryError } from "../interfaces/errors";
+import logger from "../logger";
 
 @Service()
 class UserController {
@@ -16,14 +17,18 @@ class UserController {
     try {
       user = await this.userRepository.findById(id);
     } catch (error) {
+      logger.error(error);
       throw { statusCode: 500, message: error.message } as QueryError;
     }
 
-    if (!user)
+    if (!user) {
+      const message = `No user found for id: ${id}`;
+      logger.warn(message);
       throw {
         statusCode: 404,
-        message: `No user found for id: ${id}`,
+        message,
       } as QueryError;
+    }
 
     return user;
   };
@@ -36,11 +41,14 @@ class UserController {
       throw { statusCode: 500, message: error.message } as QueryError;
     }
 
-    if (users.length <= 0)
+    if (users.length <= 0) {
+      const message = `No user(s) found for search term: ${searchTerm}`;
+      logger.warn(message);
       throw {
         statusCode: 404,
-        message: `No user(s) found for search term: ${searchTerm}`,
+        message,
       } as QueryError;
+    }
 
     return users;
   };

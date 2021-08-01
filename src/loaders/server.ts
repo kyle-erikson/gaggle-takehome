@@ -4,6 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import routes from "../routes";
 import config from "../config";
+import logger from "../logger";
 
 const server = () => {
   const app: Application = express();
@@ -30,6 +31,8 @@ const server = () => {
       },
     });
 
+    logger.error(err);
+
     return next(err);
   };
 
@@ -38,10 +41,10 @@ const server = () => {
   if (process.env.NODE_ENV !== "test") {
     try {
       app.listen(config.port, (): void => {
-        console.log(`Connected successfully on port ${config.port}`);
+        logger.info(`Connected successfully on port ${config.port}`)
       });
     } catch (error) {
-      console.error(`Error occurred: ${error.message}`);
+      logger.error(`Error occurred: ${error.message}`);
     }
   }
 

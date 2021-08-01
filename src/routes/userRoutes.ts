@@ -10,6 +10,8 @@ const route = Router();
 export default (app: Router) => {
   app.use("/users", route);
 
+  //NOTE: Could add Winston middleware to log all requests and responses
+
   route.get(
     "/search",
     //Could have middleware here for auth,
