@@ -6,7 +6,7 @@ import helmet from "helmet";
 import routes from "../routes";
 
 export default (app: Application) => {
-  app.enable("trust proxy");
+  // app.enable("trust proxy");
   app.use(cors());
   app.use(helmet());
   app.use(express.json());
