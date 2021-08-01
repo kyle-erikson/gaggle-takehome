@@ -1,20 +1,19 @@
 import { Application, ErrorRequestHandler } from "express";
-import { errors, isCelebrateError } from "celebrate";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import routes from "../routes";
+import config from "../config";
 
-export default (app: Application) => {
-  // app.enable("trust proxy");
+const server = () => {
+  const app: Application = express();
+
+  app.enable("trust proxy");
   app.use(cors());
   app.use(helmet());
   app.use(express.json());
-  app.use(errors());
 
-  console.log("loading routes");
   app.use("/", routes);
-  console.log("done with routes");
 
   //catch 404 and forward to error handler
   app.use((req, res, next) => {
@@ -24,18 +23,29 @@ export default (app: Application) => {
   });
 
   const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    if (isCelebrateError(err)) {
-      return res.status(422).send({ error: err.details }).end();
-    } else {
-      res.status(err.status || 500);
-      res.json({
-        errors: {
-          message: err.message,
-        },
-      });
-    }
+    res.status(err.status || 500);
+    res.json({
+      errors: {
+        message: err.message,
+      },
+    });
+
     return next(err);
   };
 
   app.use(errorHandler);
+
+  if (process.env.NODE_ENV !== "test") {
+    try {
+      app.listen(config.port, (): void => {
+        console.log(`Connected successfully on port ${config.port}`);
+      });
+    } catch (error) {
+      console.error(`Error occurred: ${error.message}`);
+    }
+  }
+
+  return app;
 };
+
+export default server;

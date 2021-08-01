@@ -1,39 +1,48 @@
-import { Request, Response } from "express";
-import { Inject, Service } from "typedi";
-import { UserService } from "../services/userService";
+import { Service } from "typedi";
 import { User } from "../interfaces/user";
-import { SearchForUserReqBody } from "../interfaces/requests";
-import { Container } from "typeorm-typedi-extensions";
+import { InjectRepository } from "typeorm-typedi-extensions";
+import { UserRepository } from "../repositories/userRepository";
+import { QueryError } from "../interfaces/errors";
 
 @Service()
 class UserController {
-  constructor() {
-  }
-  
-  GetById = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const intId = parseInt(id);
+  constructor(
+    @InjectRepository()
+    private readonly userRepository: UserRepository
+  ) {}
 
-    if (!intId)
-      res.status(400).json({
-        error: "ID needs to be an integer value",
-      });
+  GetById = async (id: number) => {
+    let user: User | undefined = undefined;
+    try {
+      user = await this.userRepository.findById(id);
+    } catch (error) {
+      throw { statusCode: 500, message: error.message } as QueryError;
+    }
 
-    const userService = Container.get(UserService);  
-    const user: User | undefined = await userService.GetUserById(intId);
+    if (!user)
+      throw {
+        statusCode: 404,
+        message: `No user found for id: ${id}`,
+      } as QueryError;
 
-    return res.status(200).json(user);
+    return user;
   };
 
-  SearchForUser = async (req: Request, res: Response) => {
-    const { searchTerm } = req.body as SearchForUserReqBody;
+  SearchForUser = async (searchTerm: string) => {
+    let users: User[] = [];
+    try {
+      users = await this.userRepository.searchForUsers(searchTerm);
+    } catch (error) {
+      throw { statusCode: 500, message: error.message } as QueryError;
+    }
 
-    const userService = Container.get(UserService);
-    const users: User[] = await userService.SearchForUser(searchTerm);
+    if (users.length <= 0)
+      throw {
+        statusCode: 404,
+        message: `No user(s) found for search term: ${searchTerm}`,
+      } as QueryError;
 
-    if (users.length <= 0) res.status(404).json({message: `No users found matching search term: ${searchTerm}`})
-
-    return res.status(200).json(users);
+    return users;
   };
 }
 

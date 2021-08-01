@@ -1,15 +1,14 @@
-import { Application } from "express";
 import "reflect-metadata";
 import database from "./database";
 import server from "./server";
 
-export default async (app: Application) => {
+export default async () => {
   try {
     await database();
   } catch (error) {
-    console.log("error connecting to db", error);
+    console.log("Error connecting to db", error);
   }
 
-  await server(app);
+  await server();
   console.log("Server loaded!");
 };
