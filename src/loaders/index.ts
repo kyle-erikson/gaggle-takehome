@@ -10,6 +10,7 @@ export default async () => {
     logger.error("Error connecting to db", error);
   }
 
-  await server();
+  const app = await server();
   logger.info("Server loaded!");
+  return app;
 };
