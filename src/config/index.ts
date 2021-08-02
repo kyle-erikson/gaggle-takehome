@@ -10,8 +10,7 @@ if (!envFound) {
 export default {
   port: process.env.PORT,
   database: {
-    type: process.env.TYPEORM_CONNECTION,
-    url: process.env.TYPEORM_HOST,
+    type: process.env.TYPEORM_CONNECTION ?? "postgres",
     host: process.env.TYPEORM_HOST,
     port: Number.parseInt(process.env.TYPEORM_PORT ?? "5432"),
     username: process.env.TYPEORM_USERNAME,
