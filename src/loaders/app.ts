@@ -10,15 +10,17 @@ import database from "./database";
 export const app: Application = express();
 
 app.enable("trust proxy");
-app.use(cors());
+app.use(cors({origin: true}));
 app.use(helmet());
 app.use(express.json());
 
 app.use("/", routes);
 
+//Need to do some securing with something like JWT tokens or similar
+
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const error: any = new Error(`Not Found: ${req.header}:${req.body}`,);
+  const error: any = new Error('Not Found',);
   error.status = 404;
   next(error);
 });
@@ -53,5 +55,3 @@ if (process.env.NODE_ENV !== "test") {
       logger.error("Error connecting to db: ", err);
     });
 }
-
-// module.exports = app;

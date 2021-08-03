@@ -12,10 +12,12 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+    environment: ${file(env.${opt:stage, self:provider.stage}.json)}
 
 plugins:
   - serverless-offline
   - serverless-plugin-typescript
 
-properties:
-    Environment:
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true

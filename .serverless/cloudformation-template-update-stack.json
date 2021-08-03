@@ -161,13 +161,24 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/gaggle-takehome/dev/1627859344770-2021-08-01T23:09:04.770Z/gaggle-takehome.zip"
+          "S3Key": "serverless/gaggle-takehome/dev/1627949230988-2021-08-03T00:07:10.988Z/gaggle-takehome.zip"
         },
         "Handler": "./src/main.http",
         "Runtime": "nodejs14.x",
         "FunctionName": "gaggle-takehome-dev-main",
         "MemorySize": 1024,
         "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "TYPEORM_CONNECTION": "postgres",
+            "TYPEORM_HOST": "gaggle.cpw9ympvfg6n.us-east-1.rds.amazonaws.com",
+            "TYPEORM_USERNAME": "postgres",
+            "TYPEORM_PASSWORD": "password",
+            "TYPEORM_DATABASE": "gaggle",
+            "TYPEORM_PORT": "5432",
+            "TYPEORM_LOGGING": "true"
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -179,14 +190,14 @@
         "MainLogGroup"
       ]
     },
-    "MainLambdaVersion2AWg3QYRj9sDcVR3MnVbYJKPMuJe8I9owUT4xDFVbs": {
+    "MainLambdaVersion2WSk5ro57OwDzcFkQi1bfv1FTS7hEZYmesXxdvJBo1A": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "MainLambdaFunction"
         },
-        "CodeSha256": "aoaQ/YaW4RCIP+4abwwZr78I+7hbDd4y18leQImFH+A="
+        "CodeSha256": "jDcIKzFOPaoVGTJIDkEJTCk/xORVN6nTISygVLQQY3A="
       }
     },
     "ApiGatewayRestApi": {
@@ -311,7 +322,7 @@
         "MainLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1627859214899": {
+    "ApiGatewayDeployment1627949121804": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -374,7 +385,7 @@
     "MainLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "MainLambdaVersion2AWg3QYRj9sDcVR3MnVbYJKPMuJe8I9owUT4xDFVbs"
+        "Ref": "MainLambdaVersion2WSk5ro57OwDzcFkQi1bfv1FTS7hEZYmesXxdvJBo1A"
       },
       "Export": {
         "Name": "sls-gaggle-takehome-dev-MainLambdaFunctionQualifiedArn"

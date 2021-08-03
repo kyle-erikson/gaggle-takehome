@@ -12,6 +12,26 @@ class UserController {
     private readonly userRepository: UserRepository
   ) {}
 
+  GetAllUsers = async () => {
+    let users: User[] = [];
+    try {
+      users = await this.userRepository.find();
+    } catch (error) {
+      throw { statusCode: 500, message: error.message } as QueryError;
+    }
+
+    if (users.length <= 0) {
+      const message = `No user(s) found.`;
+      logger.warn(message);
+      throw {
+        statusCode: 404,
+        message,
+      } as QueryError;
+    }
+
+    return users;
+  };
+
   GetById = async (id: number) => {
     let user: User | undefined = undefined;
     try {
