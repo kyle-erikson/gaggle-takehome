@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { EntityRepository, IsNull, Not } from 'typeorm';
-import { User } from '../models/userModel';
+import { User } from '../models/user.entity';
 import { Repository } from 'typeorm/repository/Repository';
 
 @Service()
