@@ -20,9 +20,6 @@ export default (app: Router) => {
     //Attempted to use a middleware like Celebrate for Joi validation,
     //but was having issues and I don't have enough time to troubleshoot.
     async (req, res) => {
-      console.log("calling search");
-      console.log(req.body);
-
       const schema = Joi.object().keys({
         searchTerm: Joi.string().min(2).trim().required(),
       });

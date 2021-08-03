@@ -5,19 +5,13 @@ import helmet from "helmet";
 import routes from "../routes";
 import config from "../config";
 import logger from "../logger";
-import database from "./database";
-import bodyParser from "body-parser";
 
 export const app: Application = express();
 
-// database().then(setUpExpress).catch((err) => {
-//   logger.error("Error connecting to db: ", err);
-// })
-
-// app.enable("trust proxy");
-// app.use(cors());
+app.enable("trust proxy");
+app.use(cors());
 app.use(helmet());
-app.use(bodyParser.json());
+app.use(express.json());
 
 //Need to do some securing with something like JWT tokens or similar
 
@@ -25,7 +19,7 @@ app.use("/", routes);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const error: any = new Error('Not Found',);
+  const error: any = new Error("Not Found");
   error.status = 404;
   next(error);
 });
@@ -45,26 +39,11 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 app.use(errorHandler);
 
-// if (process.env.NODE_ENV !== "test") {
-//   database()
-//     .then(() => {
-//       try {
-//         app.listen(config.port, (): void => {
-//           logger.info(`Connected successfully on port ${config.port}`);
-//         });
-//       } catch (error) {
-//         logger.error(`Error occurred: ${error.message}`);
-//       }
-//     })
-//     .catch((err) => {
-//       logger.error("Error connecting to db: ", err);
-//     });
-// }
-
 if (process.env.NODE_ENV !== "test" || process.env.IS_OFFLINE) {
   try {
     app.listen(config.port, (): void => {
-      logger.info(`Connected successfully on port ${config.port}`);});
+      logger.info(`Connected successfully on port ${config.port}`);
+    });
   } catch (error) {
     logger.error(`Error occurred: ${error.message}`);
   }

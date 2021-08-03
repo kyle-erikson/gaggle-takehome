@@ -1,23 +1,8 @@
-import loaders from "./loaders";
-import serverless from 'serverless-http';
-import { createServer, proxy } from "aws-serverless-express";
+import serverless from "serverless-http";
 import { Context } from "aws-lambda";
-import {app} from './loaders/app';
+import { app } from "./loaders/app";
 import logger from "./logger";
 import database from "./loaders/database";
-// const serverless = require('serverless-http');
-// const serverlessExpress = require('@vendia/serverless-express');
-// const app = async () => {
-//   return await loaders
-// }
-// import server from './loaders/server';
-
-// const server = createServer(app, app);
-
-// export const http = (event: any, context: Context) =>
-//   proxy(server, event, context);
-
-// exports.http = serverlessExpress({app});
 
 exports.http = async (event: any, context: Context) => {
   try {
@@ -29,4 +14,4 @@ exports.http = async (event: any, context: Context) => {
     logger.error(error);
     throw error;
   }
-}
+};
